@@ -1,0 +1,646 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "course": {
+      "type": "object",
+      "properties": {
+        "courseId": {
+          "type": "string"
+        },
+        "courseTitle": {
+          "type": "string"
+        },
+        "courseDescription": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "totalDuration": {
+          "type": "string"
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "moduleId": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "moduleExplanation": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "topic": {
+                      "type": "string"
+                    },
+                    "points": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "points",
+                    "topic"
+                  ]
+                }
+              },
+              "duration": {
+                "type": "string"
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "lessonId": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "objective": {
+                      "type": "string"
+                    },
+                    "lessonExplanation": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "topic": {
+                            "type": "string"
+                          },
+                          "points": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "points",
+                          "topic"
+                        ]
+                      }
+                    },
+                    "duration": {
+                      "type": "string"
+                    },
+                    "hooklines_title": {
+                      "type": "string"
+                    },
+                    "hooklineimage": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string"
+                        },
+                        "html": {
+                          "type": "string"
+                        },
+                        "alt": {
+                          "type": "string"
+                        },
+                        "prompt": {
+                          "type": "string"
+                        },
+                        "style": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "alt",
+                        "html",
+                        "prompt",
+                        "status",
+                        "style"
+                      ]
+                    },
+                    "hooklines": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "text": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string"
+                              },
+                              "html": {
+                                "type": "string"
+                              },
+                              "alt": {
+                                "type": "string"
+                              },
+                              "prompt": {
+                                "type": "string"
+                              },
+                              "style": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "alt",
+                              "html",
+                              "prompt",
+                              "status",
+                              "style"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "image",
+                          "text"
+                        ]
+                      }
+                    },
+                    "concepts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "syntax": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "highlight": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "code"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "highlight",
+                        "title"
+                      ]
+                    },
+                    "parts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "description",
+                          "label",
+                          "name"
+                        ]
+                      }
+                    },
+                    "analogy": {
+                      "type": "object",
+                      "properties": {
+                        "subject": {
+                          "type": "string"
+                        },
+                        "comparison": {
+                          "type": "string"
+                        },
+                        "mapping": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "from": {
+                                "type": "string"
+                              },
+                              "to": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "from",
+                              "to"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "comparison",
+                        "mapping",
+                        "subject"
+                      ]
+                    },
+                    "example": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "code": {
+                            "type": "string"
+                          },
+                          "explanation": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "explanation",
+                          "title"
+                        ]
+                      }
+                    },
+                    "flowchart": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code",
+                        "title",
+                        "type"
+                      ]
+                    },
+                    "interactiveExercise": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "instruction": {
+                          "type": "string"
+                        },
+                        "starterCode": {
+                          "type": "string"
+                        },
+                        "expectebehavior": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "expectebehavior",
+                        "instruction",
+                        "starterCode",
+                        "title"
+                      ]
+                    },
+                    "quiz": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string"
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "correctAnswer": {
+                            "type": "string"
+                          },
+                          "explanation": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "correctAnswer",
+                          "explanation",
+                          "options",
+                          "question"
+                        ]
+                      }
+                    },
+                    "codereordering": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "instruction": {
+                          "type": "string"
+                        },
+                        "codelines": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "correctOrder": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "codelines",
+                        "correctOrder",
+                        "instruction",
+                        "title"
+                      ]
+                    },
+                    "dragandropp": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "instruction": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "content": {
+                                "type": "string"
+                              },
+                              "correctCategory": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "content",
+                              "correctCategory",
+                              "id"
+                            ]
+                          }
+                        },
+                        "correctpairs": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "correctpairs",
+                        "instruction",
+                        "items",
+                        "title"
+                      ]
+                    },
+                    "cardmatching": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "instruction": {
+                          "type": "string"
+                        },
+                        "cards": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "content": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "content",
+                              "id"
+                            ]
+                          }
+                        },
+                        "matches": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "card1Id": {
+                                "type": "string"
+                              },
+                              "card2Id": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "card1Id",
+                              "card2Id"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "cards",
+                        "instruction",
+                        "matches",
+                        "title"
+                      ]
+                    },
+                    "bugHunt": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "instruction": {
+                          "type": "string"
+                        },
+                        "buggyCode": {
+                          "type": "string"
+                        },
+                        "bug": {
+                          "type": "string"
+                        },
+                        "fixedCode": {
+                          "type": "string"
+                        },
+                        "hint": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "bug",
+                        "buggyCode",
+                        "fixedCode",
+                        "hint",
+                        "instruction",
+                        "title"
+                      ]
+                    },
+                    "miniChallenge": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "scenario": {
+                          "type": "string"
+                        },
+                        "prompt": {
+                          "type": "string"
+                        },
+                        "starterCode": {
+                          "type": "string"
+                        },
+                        "hints": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "expectedOutput": {
+                          "type": "string"
+                        },
+                        "difficulty": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "difficulty",
+                        "expectedOutput",
+                        "hints",
+                        "prompt",
+                        "scenario",
+                        "starterCode",
+                        "title"
+                      ]
+                    },
+                    "useCaseCards": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "industry": {
+                            "type": "string"
+                          },
+                          "jobRole": {
+                            "type": "string"
+                          },
+                          "useCase": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "industry",
+                          "jobRole",
+                          "useCase"
+                        ]
+                      }
+                    },
+                    "realWorldStory": {
+                      "type": "object",
+                      "properties": {
+                        "storyTitle": {
+                          "type": "string"
+                        },
+                        "storyText": {
+                          "type": "string"
+                        },
+                        "storyCompany": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "storyCompany",
+                        "storyText",
+                        "storyTitle"
+                      ]
+                    },
+                    "keyTakeaways": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "analogy",
+                    "bugHunt",
+                    "cardmatching",
+                    "codereordering",
+                    "concepts",
+                    "dragandropp",
+                    "duration",
+                    "example",
+                    "flowchart",
+                    "hooklineimage",
+                    "hooklines",
+                    "hooklines_title",
+                    "interactiveExercise",
+                    "keyTakeaways",
+                    "lessonExplanation",
+                    "lessonId",
+                    "miniChallenge",
+                    "objective",
+                    "parts",
+                    "quiz",
+                    "realWorldStory",
+                    "syntax",
+                    "title",
+                    "useCaseCards"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "description",
+              "duration",
+              "lessons",
+              "moduleExplanation",
+              "moduleId",
+              "title"
+            ]
+          }
+        }
+      },
+      "required": [
+        "courseDescription",
+        "courseId",
+        "courseTitle",
+        "level",
+        "modules",
+        "totalDuration"
+      ]
+    }
+  },
+  "required": [
+    "course"
+  ]
+}
