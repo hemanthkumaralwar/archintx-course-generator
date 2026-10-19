@@ -24,22 +24,22 @@ pip install -r requirements.txt
 
    **Windows (PowerShell):**
    ```powershell
-   Copy-Item .env.example .env
+   Copy-Item .env.example.env .env
    ```
 
    **Windows (Command Prompt / CMD):**
    ```cmd
-   copy .env.example .env
+   copy .env.example.env .env
    ```
 
    **Windows Bash (Git Bash):**
    ```bash
-   cp .env.example .env
+   cp .env.example.env .env
    ```
 
    **Unix/Linux/macOS (Terminal):**
    ```bash
-   cp .env.example .env
+   cp .env.example.env .env
    ```
 
 2. Open `.env` and replace `your_api_key_here` with your actual Gemini API key.
