@@ -18,13 +18,39 @@ source venv/bin/activate     # macOS / Linux
 pip install -r requirements.txt
 ```
 
-Rename `.env-example` to `.env` and add your Gemini API key to the file:
+## Configure Your Gemini API Key
 
-```env
-GEMINI_API_KEY=your_api_key_here
-```
+1. Copy `.env.example` to `.env` in the project root.
 
-Replace `your_api_key_here` with your actual Gemini API key.
+   **Windows (PowerShell):**
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+   **Windows (Command Prompt / CMD):**
+   ```cmd
+   copy .env.example .env
+   ```
+
+   **Windows Bash (Git Bash):**
+   ```bash
+   cp .env.example .env
+   ```
+
+   **Unix/Linux/macOS (Terminal):**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Open `.env` and replace `your_api_key_here` with your actual Gemini API key.
+
+   ```env
+   GEMINI_API_KEY=your_api_key_here
+   ```
+
+3. Save the file before running the course generator.
+
+**Note:** Never commit or share your `.env` file. It contains your secret API key. Keep `.env.example` in GitHub as a safe template for other developers.
 
 ## Run
 
