@@ -11,9 +11,10 @@ WHY:  Small requests are less likely to be rejected or cut off, and a
       failed lesson can be retried without redoing the rest of the course.
 """
 
+import json
 import re
 
-from config import OBJECTIVE_POINTS
+from config import OBJECTIVE_POINTS, SYNTAX_LINES_MAX, SYNTAX_LINES_MIN
 from exceptions import ValidationFailedError
 from gemini_service import request_json
 from json_utils import save_json
@@ -599,9 +600,10 @@ def check_syntax_and_parts(lesson):
         else:
             code_lines = [line for line in code.splitlines() if line.strip()]
 
-            if not 2 <= len(code_lines) <= 6:
+            if not SYNTAX_LINES_MIN <= len(code_lines) <= SYNTAX_LINES_MAX:
                 errors.append(
-                    f"syntax.highlight.code must have 2 to 6 lines (got {len(code_lines)})"
+                    f"syntax.highlight.code must have {SYNTAX_LINES_MIN} to "
+                    f"{SYNTAX_LINES_MAX} lines (got {len(code_lines)})"
                 )
 
     parts = lesson.get("parts")
@@ -774,6 +776,102 @@ def _save_rejected(path, index_label, attempt_number, errors, generated, error_d
     )
 
 
+# How many times one failing section is sent back to Gemini for a fix.
+SECTION_REPAIR_ROUNDS = 2
+
+# Maps the start of a structure error to the lesson field it belongs to.
+ERROR_SECTIONS = [
+    (r"^syntax", "syntax"),
+    (r"^parts", "parts"),
+    (r"^hooklineimage", "hooklineimage"),
+    (r"^hooklines\[", "hooklines"),
+    (r"^objective", "objective"),
+    (r"^codereordering", "codereordering"),
+    (r"^dragandropp", "dragandropp"),
+    (r"^cardmatching", "cardmatching"),
+    (r"^flowchart", "flowchart"),
+    (r"^quiz", "quiz"),
+    (r"^example", "example"),
+    (r"^keyTakeaways", "keyTakeaways"),
+    (r"^lesson title", "title"),
+]
+
+
+def section_for_error(error):
+    """
+    WHAT: Return the lesson field that an error message is about, or None.
+
+    WHY:  If every error points to the same field, only that field needs fixing.
+    """
+    for pattern, key in ERROR_SECTIONS:
+        if re.match(pattern, error):
+            return key
+
+    return None
+
+
+def lesson_structure_errors(data):
+    """
+    WHAT: Run the mechanical repairs, then every structure check, on one lesson.
+
+    RETURNS:
+        A list of error strings. Empty means the lesson passes.
+    """
+    repair_lesson(data)
+
+    errors = check_objective(data.get("objective"), OBJECTIVE_POINTS)
+    errors += check_code_reorder(data.get("codereordering"))
+    errors += check_drag_drop(data.get("dragandropp"))
+    errors += check_card_matching(data.get("cardmatching"))
+    errors += check_flowchart(data.get("flowchart"))
+    errors += check_hook_image(data.get("hooklineimage"))
+    errors += check_syntax_and_parts(data)
+    errors += check_hookline_images(data)
+    errors += check_quiz_answers(data)
+    errors += check_example_titles(data)
+    errors += check_lesson_title(data)
+    errors += check_key_takeaways(data)
+    return errors
+
+
+def repair_section(client, request, lesson, key, errors, schemas):
+    """
+    WHAT: Ask Gemini to fix only one field of a lesson, given the errors for it.
+
+    WHY:  Regenerating a whole lesson repeats the same mistake. A smaller request
+          with the current field and its exact problems is much more likely to
+          produce a fix. The rest of the lesson is left as it is.
+
+    RETURNS:
+        The fixed field value, or None if the schema has no such field.
+    """
+    section_schema = schemas.lesson_request.get("properties", {}).get(key)
+
+    if section_schema is None:
+        return None
+
+    current = json.dumps(lesson.get(key), ensure_ascii=False, indent=2)
+    problems = "\n".join(f"- {error}" for error in errors)
+
+    prompt = f"""
+Fix only the "{key}" field of one lesson in the course "{request.title}".
+
+Current "{key}" value:
+{current}
+
+Problems to fix:
+{problems}
+
+Rules:
+- Change only what is needed to fix these problems. Keep the meaning and the teaching content.
+- Keep every limit named in the problems, such as a maximum number of lines.
+- Keep the same JSON shape as the current value.
+- Return only the JSON for "{key}", with no Markdown fences or extra text.
+"""
+
+    return request_json(client, section_schema, prompt, f"repairing the {key} field")
+
+
 def write_overview(client, request, index, plan_modules, details, schemas):
     """
     WHAT: Generate and validate the overview of module index (zero-based).
@@ -859,20 +957,26 @@ def write_lesson(client, request, module_index, lesson_index, plan_modules, modu
                 errors=[f"{label}: top-level value is not an object"],
             )
 
-        repair_lesson(data)
+        structure_errors = lesson_structure_errors(data)
 
-        structure_errors = check_objective(data.get("objective"), OBJECTIVE_POINTS)
-        structure_errors += check_code_reorder(data.get("codereordering"))
-        structure_errors += check_drag_drop(data.get("dragandropp"))
-        structure_errors += check_card_matching(data.get("cardmatching"))
-        structure_errors += check_flowchart(data.get("flowchart"))
-        structure_errors += check_hook_image(data.get("hooklineimage"))
-        structure_errors += check_syntax_and_parts(data)
-        structure_errors += check_hookline_images(data)
-        structure_errors += check_quiz_answers(data)
-        structure_errors += check_example_titles(data)
-        structure_errors += check_lesson_title(data)
-        structure_errors += check_key_takeaways(data)
+        # If the errors all belong to one field, ask Gemini to fix only that field.
+        for _ in range(SECTION_REPAIR_ROUNDS):
+            if not structure_errors:
+                break
+
+            keys = {section_for_error(error) for error in structure_errors}
+
+            if len(keys) != 1 or None in keys:
+                break
+
+            key = keys.pop()
+            fixed = repair_section(client, request, data, key, structure_errors, schemas)
+
+            if fixed is None:
+                break
+
+            data[key] = fixed
+            structure_errors = lesson_structure_errors(data)
 
         if structure_errors:
             _save_rejected(

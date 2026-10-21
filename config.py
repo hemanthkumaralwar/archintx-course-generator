@@ -56,6 +56,10 @@ LESSONS_PER_MODULE = 8
 # Numbered points inside each lesson's "objective" text, written as (1), (2), ...
 OBJECTIVE_POINTS = 4
 
+# Lines of code allowed in the syntax example.
+SYNTAX_LINES_MIN = 2
+SYNTAX_LINES_MAX = 6
+
 # Exact item counts inside EACH lesson. Keys are paths inside a lesson.
 # Card matching uses 12 cards that form 6 pairs (term and its description).
 LESSON_ITEM_COUNTS = {
@@ -132,6 +136,11 @@ def validate_config():
     for name, value in (("ARRAY_PATH", ARRAY_PATH), ("LESSON_ARRAY_PATH", LESSON_ARRAY_PATH)):
         if value is not None and not str(value).strip():
             raise ConfigurationError(f"{name} is set but empty. Use None or a path.")
+
+    if not 1 <= SYNTAX_LINES_MIN <= SYNTAX_LINES_MAX:
+        raise ConfigurationError(
+            f"SYNTAX_LINES_MIN/MAX are invalid: {SYNTAX_LINES_MIN}-{SYNTAX_LINES_MAX}."
+        )
 
     if LESSONS_PER_MODULE < 1:
         raise ConfigurationError(
